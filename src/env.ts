@@ -4,6 +4,8 @@ import { z } from "@hono/zod-openapi";
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string().min(1),
+    BETTER_AUTH_SECRET: z.string().min(1),
+    BETTER_AUTH_URL: z.url().min(1),
   },
   runtimeEnv: process.env,
 });

@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import db from "@/db/client";
-import { todosTable } from "@/db/schema";
+import { todosTable } from "@/db/schemas/todos";
 import type { NewTodoBody, UpdateTodoBody } from "@/schemas/entities";
 
 export const todosService = {

@@ -1,7 +1,5 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 
-import { env } from "@/env";
-
 export const hono = () =>
   new OpenAPIHono({
     defaultHook: (result, c) => {

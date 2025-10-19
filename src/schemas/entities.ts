@@ -5,7 +5,7 @@ import {
   createUpdateSchema,
 } from "drizzle-zod";
 
-import { todosTable } from "@/db/schema";
+import { todosTable } from "@/db/schemas/todos";
 
 export const Todo = createSelectSchema(todosTable, {
   id: (s) => s.openapi({ example: "550e8400-e29b-41d4-a716-446655440000" }),
