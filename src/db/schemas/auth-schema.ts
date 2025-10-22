@@ -1,4 +1,7 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { relations } from "drizzle-orm";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+
+import { todosTable } from "./todos";
 
 export const user = sqliteTable("user", {
   id: text("id").primaryKey(),
@@ -73,3 +76,8 @@ export const verification = sqliteTable("verification", {
     .$onUpdate(() => new Date())
     .notNull(),
 });
+
+export const userRelations = relations(user, ({ many }) => ({
+  todosCreated: many(todosTable, { relationName: "createdTodos" }),
+  todosUpdated: many(todosTable, { relationName: "updatedTodos" }),
+}));

@@ -1,15 +1,15 @@
+import { Scalar } from "@scalar/hono-api-reference";
+import { createMarkdownFromOpenApi } from "@scalar/openapi-to-markdown";
+import type { Swagger } from "atlassian-openapi";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
-import { Scalar } from "@scalar/hono-api-reference";
-import { createMarkdownFromOpenApi } from "@scalar/openapi-to-markdown";
 import { isErrorResult, merge } from "openapi-merge";
-import type { Swagger } from "atlassian-openapi";
 
-import { openapi } from "./config/openapi";
-import todos from "./routes/todos";
-import { hono } from "./lib/hono";
+import { humanDescription, llmIndexMarkdown, openapi } from "./config/docs";
 import { auth } from "./lib/auth";
+import { hono } from "./lib/hono";
+import todos from "./routes/todos";
 
 const api = hono();
 
@@ -45,20 +45,18 @@ const [apiMarkdown, authMarkdown] = await Promise.all([
   createMarkdownFromOpenApi(JSON.stringify(authSchema)),
 ]);
 
-const combinedMarkdown = `# Full API Documentation
-
-${apiMarkdown.replace(/^#/gm, "##")}
-
----
-
-${authMarkdown.replace(/^#/gm, "##")}`;
-
 api.get(
   "/docs",
   Scalar({
     pageTitle: openapi.info.title,
     sources: [
-      { content: apiSchema, title: "API" },
+      {
+        content: {
+          ...apiSchema,
+          info: { ...openapi.info, description: humanDescription },
+        },
+        title: "API",
+      },
       { content: authSchema, title: "Auth" },
     ],
   }),
@@ -68,7 +66,20 @@ api.get("/openapi.json", (c) => c.json(mergedResult.output));
 
 api.get("/llms.txt", (c) => {
   c.header("Content-Type", "text/plain; charset=utf-8");
-  return c.text(combinedMarkdown);
+
+  return c.text(llmIndexMarkdown);
+});
+
+api.get("/api-llms.txt", (c) => {
+  c.header("Content-Type", "text/plain; charset=utf-8");
+
+  return c.text(apiMarkdown);
+});
+
+api.get("/auth-llms.txt", (c) => {
+  c.header("Content-Type", "text/plain; charset=utf-8");
+
+  return c.text(authMarkdown);
 });
 
 api.get("/", (c) => c.redirect("/docs", 301));

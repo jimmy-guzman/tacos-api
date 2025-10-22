@@ -1,3 +1,4 @@
+import { hono } from "@/lib/hono";
 import {
   CreateTodoRoute,
   DeleteTodoRoute,
@@ -5,7 +6,6 @@ import {
   ListTodosRoute,
   UpdateTodoRoute,
 } from "@/schemas/routes";
-import { hono } from "@/lib/hono";
 import { todosService } from "@/services/todos";
 
 const app = hono();
@@ -19,9 +19,21 @@ app.openapi(ListTodosRoute, async (c) => {
 });
 
 app.openapi(CreateTodoRoute, async (c) => {
+  const user = c.get("user");
+
+  if (!user) {
+    return c.json(
+      {
+        status: 401,
+        message: "Unauthorized",
+      },
+      401,
+    );
+  }
+
   const body = c.req.valid("json");
 
-  const created = await todosService.create(body);
+  const created = await todosService.create(body, user.id);
 
   return c.json(created, 201);
 });
@@ -43,10 +55,22 @@ app.openapi(GetTodoRoute, async (c) => {
 });
 
 app.openapi(UpdateTodoRoute, async (c) => {
+  const user = c.get("user");
+
+  if (!user) {
+    return c.json(
+      {
+        status: 401,
+        message: "Unauthorized",
+      },
+      401,
+    );
+  }
+
   const { todoId } = c.req.valid("param");
   const patch = c.req.valid("json");
 
-  const updated = await todosService.update(todoId, patch);
+  const updated = await todosService.update(todoId, patch, user.id);
 
   if (!updated) {
     return c.json(

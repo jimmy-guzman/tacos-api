@@ -1,6 +1,6 @@
 import { createRoute, z } from "@hono/zod-openapi";
 
-import { NewTodoBody, ApiError, Todo, UpdateTodoBody } from "./entities";
+import { ApiError, NewTodoBody, Todo, UpdateTodoBody } from "./entities";
 
 const TodoIdParam = z
   .object({
@@ -56,6 +56,11 @@ export const CreateTodoRoute = createRoute({
       description: "Todo created successfully.",
       content: { "application/json": { schema: Todo } },
     },
+    401: {
+      summary: "Unauthorized",
+      description: "Authentication is required to create a todo.",
+      content: { "application/json": { schema: ApiError } },
+    },
     409: {
       summary: "Conflict",
       description: "Conflict occurred while creating todo.",
@@ -96,7 +101,7 @@ export const GetTodoRoute = createRoute({
 });
 
 export const UpdateTodoRoute = createRoute({
-  method: "put",
+  method: "patch",
   path: "/todos/{todoId}",
   tags: ["Todos"],
   summary: "Update Todo",
@@ -110,6 +115,11 @@ export const UpdateTodoRoute = createRoute({
       summary: "Updated",
       description: "Todo item updated successfully.",
       content: { "application/json": { schema: Todo } },
+    },
+    401: {
+      summary: "Unauthorized",
+      description: "Authentication is required to update a todo.",
+      content: { "application/json": { schema: ApiError } },
     },
     404: {
       summary: "Not Found",

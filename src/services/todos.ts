@@ -24,15 +24,19 @@ export const todosService = {
     return row ?? null;
   },
 
-  async create(data: NewTodoBody) {
-    const [created] = await db.insert(todosTable).values(data).returning();
+  async create(data: NewTodoBody, userId: string) {
+    const [created] = await db
+      .insert(todosTable)
+      .values({ ...data, createdBy: userId })
+      .returning();
+
     return created;
   },
 
-  async update(id: string, data: UpdateTodoBody) {
+  async update(id: string, data: UpdateTodoBody, userId: string) {
     const [updated] = await db
       .update(todosTable)
-      .set(data)
+      .set({ ...data, updatedBy: userId })
       .where(eq(todosTable.id, id))
       .returning();
 
