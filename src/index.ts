@@ -1,14 +1,13 @@
 import { Scalar } from "@scalar/hono-api-reference";
 import { createMarkdownFromOpenApi } from "@scalar/openapi-to-markdown";
-import type { Swagger } from "atlassian-openapi";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
-import { isErrorResult, merge } from "openapi-merge";
 
 import { humanDescription, llmIndexMarkdown, openapi } from "./config/docs";
 import { auth } from "./lib/auth";
 import { hono } from "./lib/hono";
+import { mergeSchemas, prependPath } from "./lib/openapi";
 import todos from "./routes/todos";
 
 const api = hono();
@@ -28,17 +27,10 @@ const apiSchema = api.getOpenAPI31Document({
 
 const authSchema = await auth.api.generateOpenAPISchema();
 
-const mergedResult = merge([
-  { oas: apiSchema as Swagger.SwaggerV3 },
-  {
-    oas: authSchema as Swagger.SwaggerV3,
-    pathModification: { prepend: "/auth" },
-  },
+const combinedSchemas = mergeSchemas([
+  { oas: apiSchema },
+  { oas: authSchema, basePath: "/auth" },
 ]);
-
-if (isErrorResult(mergedResult)) {
-  throw new Error(`Failed to merge OpenAPI schemas: ${mergedResult.message}`);
-}
 
 const [apiMarkdown, authMarkdown] = await Promise.all([
   createMarkdownFromOpenApi(JSON.stringify(apiSchema)),
@@ -57,12 +49,15 @@ api.get(
         },
         title: "API",
       },
-      { content: authSchema, title: "Auth" },
+      {
+        content: prependPath(authSchema, "/auth"),
+        title: "Auth",
+      },
     ],
   }),
 );
 
-api.get("/openapi.json", (c) => c.json(mergedResult.output));
+api.get("/openapi.json", (c) => c.json(combinedSchemas));
 
 api.get("/llms.txt", (c) => {
   c.header("Content-Type", "text/plain; charset=utf-8");

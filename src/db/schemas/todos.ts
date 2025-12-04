@@ -2,7 +2,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-import { user } from "./auth-schema";
+import { user } from "./auth";
 
 export const todosTable = sqliteTable("todos", {
   id: text("id")
