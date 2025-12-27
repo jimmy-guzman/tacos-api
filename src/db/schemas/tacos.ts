@@ -3,16 +3,16 @@ import { sqliteTable } from "drizzle-orm/sqlite-core";
 import { typeid } from "typeid-js";
 
 export const tacosTable = sqliteTable("tacos", (t) => ({
+  createdAt: t
+    .integer({ mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  filling: t.text().notNull(),
   id: t
     .text()
     .primaryKey()
     .$defaultFn(() => typeid("taco").toString()),
   name: t.text().notNull(),
-  filling: t.text().notNull(),
-  toppings: t.text({ mode: "json" }).$type<string[]>().notNull(),
   notes: t.text(),
-  createdAt: t
-    .integer({ mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
+  toppings: t.text({ mode: "json" }).$type<string[]>().notNull(),
 }));

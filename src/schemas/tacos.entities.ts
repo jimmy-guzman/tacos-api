@@ -7,40 +7,40 @@ import {
 import { tacosTable } from "@/db/schemas/tacos";
 
 export const Taco = createSelectSchema(tacosTable, {
+  filling: (s) => s.openapi({ example: "nopales" }),
   id: (s) => s.openapi({ example: "taco_01h2xcejqtf2nbrexx3vqjhp41" }),
   name: (s) => s.openapi({ example: "Al Pastor Perfection" }),
-  filling: (s) => s.openapi({ example: "nopales" }),
-  toppings: (s) => s.openapi({ example: ["cilantro", "onion", "lime"] }),
   notes: (s) => s.openapi({ example: "Extra crispy, light on the salt" }),
+  toppings: (s) => s.openapi({ example: ["cilantro", "onion", "lime"] }),
 }).openapi("Taco");
 
 export const NewTacoBody = createInsertSchema(tacosTable, {
-  name: (s) => s.min(1).openapi({ example: "Al Pastor Perfection" }),
   filling: (s) => s.min(1).openapi({ example: "nopales" }),
-  toppings: (s) => s.openapi({ example: ["cilantro", "onion", "lime"] }),
+  name: (s) => s.min(1).openapi({ example: "Al Pastor Perfection" }),
   notes: (s) => s.openapi({ example: "Extra crispy, light on the salt" }),
+  toppings: (s) => s.openapi({ example: ["cilantro", "onion", "lime"] }),
 })
   .pick({
-    name: true,
     filling: true,
-    toppings: true,
+    name: true,
     notes: true,
+    toppings: true,
   })
   .openapi("NewTacoBody");
 
 export type NewTacoBody = z.infer<typeof NewTacoBody>;
 
 export const UpdateTacoBody = createUpdateSchema(tacosTable, {
-  name: (s) => s.min(1).openapi({ example: "Al Pastor Perfection" }),
   filling: (s) => s.min(1).openapi({ example: "carnitas" }),
-  toppings: (s) => s.openapi({ example: ["cilantro", "onion"] }),
+  name: (s) => s.min(1).openapi({ example: "Al Pastor Perfection" }),
   notes: (s) => s.openapi({ example: "Updated notes" }),
+  toppings: (s) => s.openapi({ example: ["cilantro", "onion"] }),
 })
   .pick({
-    name: true,
     filling: true,
-    toppings: true,
+    name: true,
     notes: true,
+    toppings: true,
   })
   .partial()
   .openapi("UpdateTacoBody");

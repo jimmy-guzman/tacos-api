@@ -9,119 +9,119 @@ const TacoIdParam = z
   .openapi("TacoIdParam");
 
 export const ListTacosRoute = createRoute({
+  description: "Retrieve a list of all tacos.",
   method: "get",
   path: "/tacos",
-  tags: ["Tacos"],
-  summary: "List Tacos",
-  description: "Retrieve a list of all tacos.",
   responses: {
     200: {
-      summary: "OK",
-      description: "List of tacos",
       content: { "application/json": { schema: z.array(Taco) } },
+      description: "List of tacos",
+      summary: "OK",
     },
   },
+  summary: "List Tacos",
+  tags: ["Tacos"],
 });
 
 export const CreateTacoRoute = createRoute({
+  description: "Create a new taco.",
   method: "post",
   path: "/tacos",
-  tags: ["Tacos"],
-  summary: "Create Taco",
-  description: "Create a new taco.",
   request: {
     body: { content: { "application/json": { schema: NewTacoBody } } },
   },
   responses: {
     201: {
-      summary: "Created",
-      description: "Taco created successfully.",
       content: { "application/json": { schema: Taco } },
+      description: "Taco created successfully.",
+      summary: "Created",
     },
     422: {
-      summary: "Validation Error",
-      description: "Validation Error",
       content: { "application/json": { schema: ApiError } },
+      description: "Validation Error",
+      summary: "Validation Error",
     },
   },
+  summary: "Create Taco",
+  tags: ["Tacos"],
 });
 
 export const GetTacoRoute = createRoute({
+  description: "Retrieve a specific taco by its ID.",
   method: "get",
   path: "/tacos/{tacoId}",
-  tags: ["Tacos"],
-  summary: "Get Taco by ID",
-  description: "Retrieve a specific taco by its ID.",
   request: { params: TacoIdParam },
   responses: {
     200: {
-      summary: "OK",
-      description: "The requested taco.",
       content: { "application/json": { schema: Taco } },
+      description: "The requested taco.",
+      summary: "OK",
     },
     404: {
-      summary: "Not Found",
-      description: "Taco not found.",
       content: { "application/json": { schema: ApiError } },
+      description: "Taco not found.",
+      summary: "Not Found",
     },
     422: {
-      summary: "Validation Error",
-      description: "Validation Error",
       content: { "application/json": { schema: ApiError } },
+      description: "Validation Error",
+      summary: "Validation Error",
     },
   },
+  summary: "Get Taco by ID",
+  tags: ["Tacos"],
 });
 
 export const UpdateTacoRoute = createRoute({
+  description: "Update an existing taco by its ID.",
   method: "patch",
   path: "/tacos/{tacoId}",
-  tags: ["Tacos"],
-  summary: "Update Taco",
-  description: "Update an existing taco by its ID.",
   request: {
-    params: TacoIdParam,
     body: { content: { "application/json": { schema: UpdateTacoBody } } },
+    params: TacoIdParam,
   },
   responses: {
     200: {
-      summary: "Updated",
-      description: "Taco updated successfully.",
       content: { "application/json": { schema: Taco } },
+      description: "Taco updated successfully.",
+      summary: "Updated",
     },
     404: {
-      summary: "Not Found",
-      description: "Taco not found.",
       content: { "application/json": { schema: ApiError } },
+      description: "Taco not found.",
+      summary: "Not Found",
     },
     422: {
-      summary: "Validation Error",
-      description: "Validation Error",
       content: { "application/json": { schema: ApiError } },
+      description: "Validation Error",
+      summary: "Validation Error",
     },
   },
+  summary: "Update Taco",
+  tags: ["Tacos"],
 });
 
 export const DeleteTacoRoute = createRoute({
+  description: "Delete a specific taco by its ID.",
   method: "delete",
   path: "/tacos/{tacoId}",
-  tags: ["Tacos"],
-  summary: "Delete Taco",
-  description: "Delete a specific taco by its ID.",
   request: { params: TacoIdParam },
   responses: {
     204: {
-      summary: "No Content",
       description: "Taco deleted successfully.",
+      summary: "No Content",
     },
     404: {
-      summary: "Not Found",
-      description: "Taco not found.",
       content: { "application/json": { schema: ApiError } },
+      description: "Taco not found.",
+      summary: "Not Found",
     },
     422: {
-      summary: "Validation Error",
-      description: "Validation Error",
       content: { "application/json": { schema: ApiError } },
+      description: "Validation Error",
+      summary: "Validation Error",
     },
   },
+  summary: "Delete Taco",
+  tags: ["Tacos"],
 });

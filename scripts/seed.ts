@@ -32,31 +32,34 @@ const toppings = [
 ];
 
 function generateTaco() {
-  const numToppings = faker.number.int({ min: 2, max: 5 });
+  const numToppings = faker.number.int({ max: 5, min: 2 });
   const selectedToppings = faker.helpers.arrayElements(toppings, numToppings);
 
   return {
-    name: `${faker.word.adjective()} ${faker.helpers.arrayElement(fillings)} taco`,
     filling: faker.helpers.arrayElement(fillings),
-    toppings: selectedToppings,
+    name: `${faker.word.adjective()} ${faker.helpers.arrayElement(fillings)} taco`,
     notes: faker.helpers.maybe(() => faker.lorem.sentence(), {
       probability: 0.6,
     }),
+    toppings: selectedToppings,
   };
 }
 
 async function seed() {
+  // biome-ignore lint/suspicious/noConsole: this is a script
   console.log("🌮 Seeding tacos...");
 
   const tacos = Array.from({ length: 50 }, generateTaco);
 
   await db.insert(tacosTable).values(tacos);
 
+  // biome-ignore lint/suspicious/noConsole: this is a script
   console.log(`✅ Seeded ${tacos.length} tacos`);
 }
 
 seed()
   .catch((error) => {
+    // biome-ignore lint/suspicious/noConsole: this is a script
     console.error("❌ Seed failed:", error);
     process.exit(1);
   })

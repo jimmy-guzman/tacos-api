@@ -33,8 +33,8 @@ app.openapi(GetTacoRoute, async (c) => {
     ? c.json(taco, 200)
     : c.json(
         {
-          status: 404,
           message: `Taco ${tacoId} not found`,
+          status: 404,
         },
         404,
       );
@@ -49,8 +49,8 @@ app.openapi(UpdateTacoRoute, async (c) => {
   if (!updated) {
     return c.json(
       {
-        status: 404,
         message: `Taco ${tacoId} not found`,
+        status: 404,
       },
       404,
     );
@@ -68,8 +68,8 @@ app.openapi(DeleteTacoRoute, async (c) => {
     ? c.body(null, 204)
     : c.json(
         {
-          status: 404,
           message: `Taco ${tacoId} not found`,
+          status: 404,
         },
         404,
       );

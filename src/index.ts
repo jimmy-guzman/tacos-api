@@ -17,8 +17,8 @@ api.use(cors());
 api.route("/", tacos);
 
 const apiSchema = api.getOpenAPI31Document({
-  openapi: openapi.version,
   info: openapi.info,
+  openapi: openapi.version,
 });
 
 const apiMarkdown = await createMarkdownFromOpenApi(JSON.stringify(apiSchema));
