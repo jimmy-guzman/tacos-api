@@ -1,5 +1,12 @@
 {
-  "cSpell.words": ["bunx", "llms", "paralleldrive", "treeify", "unixepoch"],
+  "cSpell.words": [
+    "buildx",
+    "bunx",
+    "llms",
+    "paralleldrive",
+    "treeify",
+    "unixepoch"
+  ],
   "editor.codeActionsOnSave": {
     "source.fixAll.biome": "explicit"
   }
